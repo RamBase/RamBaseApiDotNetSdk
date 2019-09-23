@@ -1,0 +1,70 @@
+﻿using System.Collections.Generic;
+
+namespace RamBase.Api.Sdk.Request
+{
+    public abstract class QueryParameters
+    {
+     
+        /// <summary>
+        /// Set the database to use for the request
+        /// </summary>
+        public string Db { get; set; }
+        
+        /// <summary>
+        /// Use to get localized responses. 
+        /// </summary>
+        public string Lang { get; set; }
+        
+        /// <summary>
+        /// This can be used to test a new version of a resource when your ApiClient is running an older, deprecated, version of a resource. Useminimumversion can be used to test against a newer version of the resource
+        /// </summary>
+        public int? UseMinimumVersion { get; set; }
+
+        /// <summary>
+        /// Additional query parameters
+        /// </summary>
+        public Dictionary<string, string> Parameters { get; set; } = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Add new parameter
+        /// </summary>
+        /// <param name="parameter">Parameter name</param>
+        /// <param name="value">Parameter value</param>
+        public void Add(string parameter, string value)
+        {
+            Parameters.Add(parameter, value);
+        }
+
+        /// <summary>
+        /// Creates querystring from set parameters
+        /// </summary>
+        /// <returns>Querystring</returns>
+        public string Build()
+        {
+            return ToString();
+        }
+
+        /// <summary>
+        /// Creates querystring from set parameters
+        /// </summary>
+        /// <returns>Querystring</returns>
+        public override string ToString()
+        {
+            string value = "?";
+
+            if (!string.IsNullOrEmpty(Db))
+                value += $"$db={Db}&";
+
+            if (!string.IsNullOrEmpty(Lang))
+                value += $"$lang={Lang}&";
+
+            if (UseMinimumVersion.HasValue)
+                value += $"$useMinimumVersion={UseMinimumVersion}&";
+
+            foreach (KeyValuePair<string, string> parameter in Parameters)
+                value += $"{parameter.Key}={parameter.Value}&";
+
+            return value.TrimEnd('&');
+        }
+    }
+}
