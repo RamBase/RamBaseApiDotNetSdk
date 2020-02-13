@@ -12,6 +12,10 @@
     <Product>RamBase</Product>
     <RepositoryUrl>https://github.com/RamBase/RamBaseApiDotNetSdk</RepositoryUrl>
     <PackageProjectUrl>https://api.rambase.net</PackageProjectUrl>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>RamBaseApiSdkStrongNameKey.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
