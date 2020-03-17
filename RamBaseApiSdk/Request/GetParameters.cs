@@ -71,7 +71,7 @@ namespace RamBase.Api.Sdk.Request
                 value += $"$showDomainDescriptions=true&";
 
             if (!string.IsNullOrEmpty(Filter))
-                value += $"$filter=${Filter}&";
+                value += $"$filter={Filter}&";
 
             if (!string.IsNullOrEmpty(InlineCount))
                 value += $"$inlinecount={InlineCount}&";
