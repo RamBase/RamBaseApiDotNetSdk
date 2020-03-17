@@ -65,6 +65,17 @@ namespace RamBase.Api.Sdk
             _sessions = new RamBaseSessions(_request);
         }
 
+        /// <summary>
+        /// This constructor requires an accessToken provided from elsewhere. It sets the clientId and clientSecret to null, meaning that you won't be able to use the SDKs OAuth methods.
+        /// </summary>
+        /// <param name="accessToken">RamBase access token</param>
+        /// <param name="defaultTimeout">Default HTTP request timeout</param>
+        /// <param name="defaultPath">Default API path</param>
+        public RamBaseApi(string accessToken, int defaultTimeout = _timeout, string defaultPath = "https://api.rambase.net") : this(null, null, defaultTimeout, defaultPath)
+        {
+            LoginWithAccessToken(accessToken);
+        }
+
         #region Login
 
         /// <summary>
