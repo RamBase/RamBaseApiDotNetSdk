@@ -150,6 +150,7 @@ namespace RamBase.Api.Sdk.Authentication
         /// <param name="grantType">Set this value to client_credentials</param>
         /// <param name="customerId">The customer you want this login to be associated with</param>
         /// <param name="supplierId">The supplier you want this login to be associated with</param>
+        /// <param name="target">The target system you want to login to. Can be left blank if the client only has access to one target system</param>
         /// <param name="endClientIp">If you perform a login where you need to forward the Ip address of the end user, this value will override the client ip address. This will only be necessary if the ip of the server differs from the ip of the end user. This will only work if the host ip is within a trusted ip range</param>
         /// <returns>Task with a LoginResponse containing access token</returns>
         public Task<LoginResponse> ClientCredentialsFlowAsync(
@@ -158,6 +159,7 @@ namespace RamBase.Api.Sdk.Authentication
                 string grantType,
                 string customerId,
                 string supplierId,
+                string target,
                 string endClientIp
             )
         {
@@ -169,6 +171,9 @@ namespace RamBase.Api.Sdk.Authentication
 
             if (!string.IsNullOrEmpty(supplierId))
                 postData = string.Format("{0}&supplierid={1}", postData, supplierId);
+
+            if(!string.IsNullOrEmpty(target))
+                postData = string.Format("{0}&target={1}", postData, target);
 
             if (!string.IsNullOrEmpty(endClientIp))
                 postData = string.Format("{0}&endclientip={1}", postData, endClientIp);

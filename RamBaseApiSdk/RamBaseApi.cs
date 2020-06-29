@@ -177,12 +177,13 @@ namespace RamBase.Api.Sdk
         /// </summary>
         /// <param name="customerId">The customer you want this login to be associated with</param>
         /// <param name="supplierId">The supplier you want this login to be associated with</param>
+        /// <param name="target">The target system you want to login to. Can be left blank if the client only has access to one target system</param>
         /// <param name="endClientIp">If you perform a login where you need to forward the Ip address of the end user, this value will override the client ip address. This will only be necessary if the ip of the server differs from the ip of the end user. This will only work if the host ip is within a trusted ip range</param>
         /// <returns>Empty task</returns>
         /// <exception cref="LoginException">When login fails</exception>
-        public async Task LoginWithClientCredentialsAsync(string customerId = "", string supplierId = "", string endClientIp = "")
+        public async Task LoginWithClientCredentialsAsync(string customerId = "", string supplierId = "", string target = "", string endClientIp = "")
         {
-            LoginResponse loginResponse = await _authentication.ClientCredentialsFlowAsync(ClientId, ClientSecret, "client_credentials", customerId, supplierId, endClientIp);
+            LoginResponse loginResponse = await _authentication.ClientCredentialsFlowAsync(ClientId, ClientSecret, "client_credentials", customerId, supplierId, target, endClientIp);
             LoginWithAccessToken(loginResponse.AccessToken);
         }
 
