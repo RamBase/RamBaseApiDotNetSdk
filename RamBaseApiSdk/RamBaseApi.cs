@@ -184,7 +184,7 @@ namespace RamBase.Api.Sdk
         public async Task LoginWithClientCredentialsAsync(string customerId = "", string supplierId = "", string target = "", string endClientIp = "")
         {
             LoginResponse loginResponse = await _authentication.ClientCredentialsFlowAsync(ClientId, ClientSecret, "client_credentials", customerId, supplierId, target, endClientIp);
-            LoginWithAccessToken(loginResponse.AccessToken);
+            LoginWithAccessToken(loginResponse.AccessToken, loginResponse.ExpireTime);
         }
 
         /// <summary>
