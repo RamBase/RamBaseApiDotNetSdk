@@ -11,7 +11,7 @@ namespace RamBase.Api.Sdk.Operations
         public CreatedBy CreatedBy { get; set; }
         public CreatedFor CreatedFor { get; set; }
         public ApiOperation ApiOperation { get; set; }
-        public ObjectReferance ObjectReferance { get; set; }
+        public ObjectReferance ObjectReference { get; set; }
         public Error Error { get; set; }
         public SystemJob SystemJob { get; set; }
         public string OperationInstanceLink { get; set; }
