@@ -22,6 +22,7 @@ namespace RamBase.Api.Sdk
         public string AccessToken { get; private set; }
         public string RefreshToken { get; private set; }
         public DateTime ExpireTime { get; private set; }
+        public bool IsTargetTestSystem { get; set; }
 
         private const int _timeout = 30000;
 
@@ -95,7 +96,7 @@ namespace RamBase.Api.Sdk
         /// <param name="expireTime">Time when token expires</param>
         public void LoginWithAccessToken(string accessToken, DateTime expireTime)
         {
-            SetLoginInfo(accessToken, null, expireTime);
+            SetLoginInfo(accessToken, null, expireTime, false);
         }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace RamBase.Api.Sdk
         public async Task LoginAsync(string username, string password)
         {
             LoginResponse loginResponse = await _authentication.ResourceOwnerPasswordFlowAsync(ClientId, ClientSecret, username, password, "", "", "");
-            SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime);
+            SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime, loginResponse.IsTargetTestSystem);
         }
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace RamBase.Api.Sdk
         public async Task LoginAsync(string username, string password, string target = "", string otp = "", string forwardedIp = "")
         {
             LoginResponse loginResponse = await _authentication.ResourceOwnerPasswordFlowAsync(ClientId, ClientSecret, username, password, otp, target, forwardedIp);
-            SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime);
+            SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime, loginResponse.IsTargetTestSystem);
         }
 
         /// <summary>
@@ -141,7 +142,7 @@ namespace RamBase.Api.Sdk
         public async Task LoginWithOtpAsync(string username, string password, string otp, string target = "", string forwardedIp = "")
         {
             LoginResponse loginResponse = await _authentication.ResourceOwnerPasswordFlowAsync(ClientId, ClientSecret, username, password, otp, target, forwardedIp);
-            SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime);
+            SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime, loginResponse.IsTargetTestSystem);
         }
 
         /// <summary>
@@ -156,7 +157,7 @@ namespace RamBase.Api.Sdk
         public async Task LoginWithTargetAsync(string username, string password, string target, string otp = "", string forwardedIp = "")
         {
             LoginResponse loginResponse = await _authentication.ResourceOwnerPasswordFlowAsync(ClientId, ClientSecret, username, password, otp, target, forwardedIp);
-            SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime);
+            SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime, loginResponse.IsTargetTestSystem);
         }
 
         /// <summary>
@@ -169,7 +170,7 @@ namespace RamBase.Api.Sdk
         public async Task LoginWithAuthorizationCodeAsync(string oauthCode, string redirectUri)
         {
             LoginResponse loginResponse = await _authentication.GetAccessTokenFromOauthCode(oauthCode, ClientId, ClientSecret, redirectUri);
-            SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime);
+            SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime, loginResponse.IsTargetTestSystem);
         }
 
         /// <summary>
@@ -232,7 +233,7 @@ namespace RamBase.Api.Sdk
                 throw new LoginException("Missing refresh token");
             }
             LoginResponse loginResponse = await _authentication.RefreshLogin(ClientId, ClientSecret, RefreshToken);
-            SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime);
+            SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime, loginResponse.IsTargetTestSystem);
         }
 
         /// <summary>
@@ -258,11 +259,12 @@ namespace RamBase.Api.Sdk
         /// <param name="accessToken">Oauth access token</param>
         /// <param name="refreshToken">Oauth refresh token</param>
         /// <param name="expireTime">Oauth access token expire time</param>
-        private void SetLoginInfo(string accessToken, string refreshToken, DateTime expireTime)
+        private void SetLoginInfo(string accessToken, string refreshToken, DateTime expireTime, bool isTargetTestSystem)
         {
             AccessToken = accessToken;
             RefreshToken = refreshToken;
             ExpireTime = expireTime;
+            IsTargetTestSystem = isTargetTestSystem;
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         }
 
