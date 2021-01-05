@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Net;
+using RamBaseApiSdk.Authentication;
 
 namespace RamBase.Api.Sdk.Request
 {   /// <summary>
@@ -43,7 +45,7 @@ namespace RamBase.Api.Sdk.Request
         /// <returns>Task with HTTP response</returns>
         public async Task<HttpResponseMessage> SendRequestAsync(ApiResourceVerb method, string uri, string data, string parameters)
         {
-            if(!string.IsNullOrWhiteSpace(parameters) && !parameters.StartsWith("?") && !string.IsNullOrWhiteSpace(uri) && !uri.Contains('?'))
+            if (!string.IsNullOrWhiteSpace(parameters) && !parameters.StartsWith("?") && !string.IsNullOrWhiteSpace(uri) && !uri.Contains('?'))
                 parameters = "?" + parameters;
 
             uri = string.Format("{0}{1}", uri, parameters);
@@ -77,6 +79,12 @@ namespace RamBase.Api.Sdk.Request
             {
                 return;
             }
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new UnauthorizedException();
+            }
+
             string json = await response.Content.ReadAsStringAsync();
             Error responseError = JsonConvert.DeserializeObject<Error>(json);
             throw new RequestException(response, responseError);
