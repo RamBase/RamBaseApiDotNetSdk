@@ -257,7 +257,7 @@ namespace RamBase.Api.Sdk.Authentication
 
                 if (loginError.error_code == 5)
                 {
-                    throw new OtpRequiredException(loginError.targets);
+                    throw new OtpRequiredException(loginError.targets, loginError.otp_method);
                 }
                 else if (loginError.error_code == 10)
                 {

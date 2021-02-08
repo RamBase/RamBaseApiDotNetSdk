@@ -7,6 +7,7 @@ namespace RamBase.Api.Sdk.Authentication
         public int error_code { get; set; }
         public string message { get; set; }
         public bool otp_required { get; set; } = false;
+        public OTPDeliveryMethod? otp_method { get; set; }
 
         public List<Target> targets { get; set; }
     }
