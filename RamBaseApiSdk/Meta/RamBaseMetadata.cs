@@ -19,9 +19,10 @@ namespace RamBase.Api.Sdk.Meta
         /// <param name="uri">Relative or explicit path to a resource/endpoint</param>
         /// <param name="verb">Metadata for given verb</param>
         /// <param name="parameters">HTTP request parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with metadata</returns>
         /// <exception cref="RequestException">HTTP status not successful</exception>
-        public async Task<Metadata> GetMetadataAsync(string uri, ApiResourceVerb verb, string parameters)
+        public async Task<Metadata> GetMetadataAsync(string uri, ApiResourceVerb verb, string parameters, Headers headers = null)
         {
             if (string.IsNullOrEmpty(parameters))
                 parameters = "?";
@@ -31,7 +32,7 @@ namespace RamBase.Api.Sdk.Meta
             parameters += $"uri={uri}&verb={verb}";
             parameters += "&$expand=Description";
             string url = "$metadata";
-            ApiResponse response = await _request.PerformRequestAsync(ApiResourceVerb.GET, url, parameters: parameters);
+            ApiResponse response = await _request.PerformRequestAsync(ApiResourceVerb.GET, url, parameters: parameters, headers: headers);
             MetadataResponse metadataResponse = JsonConvert.DeserializeObject<MetadataResponse>(response.Content);
             return new Metadata(metadataResponse, verb);
         } 

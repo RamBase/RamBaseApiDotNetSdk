@@ -18,8 +18,9 @@ namespace RamBase.Api.Sdk.Access
         /// </summary>
         /// <param name="accessCheckRequests">List of accesses to check</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with list of CheckAccesses</returns>
-        public async Task<List<CheckAccessResult>> CheckAccessAsync(List<CheckAccessRequest> accessCheckRequests, string parameters = "")
+        public async Task<List<CheckAccessResult>> CheckAccessAsync(List<CheckAccessRequest> accessCheckRequests, string parameters = "", Headers headers = null)
         {
             string url = "system/api/api-operations/check-access";
 
@@ -41,7 +42,7 @@ namespace RamBase.Api.Sdk.Access
                 }
              );
 
-            var response = await _request.PerformRequestAsync(ApiResourceVerb.POST, url, data, parameters);
+            var response = await _request.PerformRequestAsync(ApiResourceVerb.POST, url, data, parameters, headers);
             var res = JsonConvert.DeserializeObject<CheckAccessWrapper>(response.Content);
             return res.CheckAccessResults;
         }
