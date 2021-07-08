@@ -279,9 +279,9 @@ namespace RamBase.Api.Sdk
         /// <param name="parameters">Url query parameters</param>
         /// <returns>Task with ApiResponse containing response body as JSON</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<ApiResponse> GetAsync(string uri, string parameters = "")
+        public Task<ApiResponse> GetAsync(string uri, string parameters = "", Headers headers = null)
         {
-            return _request.PerformRequestAsync(ApiResourceVerb.GET, uri, default, parameters);
+            return _request.PerformRequestAsync(ApiResourceVerb.GET, uri, default, parameters, headers);
         }
 
         /// <summary>
@@ -298,16 +298,17 @@ namespace RamBase.Api.Sdk
         }
 
         /// <summary>
-        /// Perform an async POST request
+        /// Perform an async GET request
         /// </summary>
         /// <param name="uri">Relative or explicit path to resource</param>
-        /// <param name="data">Request body as JSON</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with ApiResponse containing response body as JSON</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<ApiResponse> PostAsync(string uri, string data, string parameters = "")
+        /// <returns></returns>
+        public Task<ApiResponse> GetAsync(string uri, GetParameters parameters, Headers headers)
         {
-            return _request.PerformRequestAsync(ApiResourceVerb.POST, uri, data, parameters);
+            return _request.PerformRequestAsync(ApiResourceVerb.GET, uri, default, parameters.Build(), headers);
         }
 
         /// <summary>
@@ -316,11 +317,26 @@ namespace RamBase.Api.Sdk
         /// <param name="uri">Relative or explicit path to resource</param>
         /// <param name="data">Request body as JSON</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with ApiResponse containing response body as JSON</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<ApiResponse> PostAsync(string uri, string data, PostParameters parameters)
+        public Task<ApiResponse> PostAsync(string uri, string data, string parameters = "", Headers headers = null)
         {
-            return _request.PerformRequestAsync(ApiResourceVerb.POST, uri, data, parameters.Build());
+            return _request.PerformRequestAsync(ApiResourceVerb.POST, uri, data, parameters, headers);
+        }
+
+        /// <summary>
+        /// Perform an async POST request
+        /// </summary>
+        /// <param name="uri">Relative or explicit path to resource</param>
+        /// <param name="data">Request body as JSON</param>
+        /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
+        /// <returns>Task with ApiResponse containing response body as JSON</returns>
+        /// <exception cref="RequestException">Whenever a request fails</exception>
+        public Task<ApiResponse> PostAsync(string uri, string data, PostParameters parameters, Headers headers = null)
+        {
+            return _request.PerformRequestAsync(ApiResourceVerb.POST, uri, data, parameters.Build(), headers);
         }
 
         /// <summary>
@@ -329,11 +345,12 @@ namespace RamBase.Api.Sdk
         /// <param name="uri">Relative or explicit path to resource</param>
         /// <param name="data">Request body as JSON</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with ApiResponse containing response body as JSON</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<ApiResponse> PutAsync(string uri, string data, string parameters = "")
+        public Task<ApiResponse> PutAsync(string uri, string data, string parameters = "", Headers headers = null)
         {
-            return _request.PerformRequestAsync(ApiResourceVerb.PUT, uri, data, parameters);
+            return _request.PerformRequestAsync(ApiResourceVerb.PUT, uri, data, parameters, headers);
         }
 
         /// <summary>
@@ -342,11 +359,12 @@ namespace RamBase.Api.Sdk
         /// <param name="uri">Relative or explicit path to resource</param>
         /// <param name="data">Request body as JSON</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with ApiResponse containing response body as JSON</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<ApiResponse> PutAsync(string uri, string data, PutParameters parameters)
+        public Task<ApiResponse> PutAsync(string uri, string data, PutParameters parameters, Headers headers = null)
         {
-            return _request.PerformRequestAsync(ApiResourceVerb.PUT, uri, data, parameters.Build());
+            return _request.PerformRequestAsync(ApiResourceVerb.PUT, uri, data, parameters.Build(), headers);
         }
 
         /// <summary>
@@ -354,11 +372,12 @@ namespace RamBase.Api.Sdk
         /// </summary>
         /// <param name="uri">Relative or explicit path to resource</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with ApiResponse containing response body as JSON</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<ApiResponse> DeleteAsync(string uri, string parameters = "")
+        public Task<ApiResponse> DeleteAsync(string uri, string parameters = "", Headers headers = null)
         {
-            return _request.PerformRequestAsync(ApiResourceVerb.DELETE, uri, default, parameters);
+            return _request.PerformRequestAsync(ApiResourceVerb.DELETE, uri, default, parameters, headers);
         }
 
         /// <summary>
@@ -366,11 +385,12 @@ namespace RamBase.Api.Sdk
         /// </summary>
         /// <param name="uri">Relative or explicit path to resource</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with ApiResponse containing response body as JSON</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<ApiResponse> DeleteAsync(string uri, DeleteParameters parameters)
+        public Task<ApiResponse> DeleteAsync(string uri, DeleteParameters parameters, Headers headers = null)
         {
-            return _request.PerformRequestAsync(ApiResourceVerb.DELETE, uri, default, parameters.Build());
+            return _request.PerformRequestAsync(ApiResourceVerb.DELETE, uri, default, parameters.Build(), headers);
         }
         #endregion
 
@@ -381,11 +401,12 @@ namespace RamBase.Api.Sdk
         /// </summary>
         /// <param name="operationId">The id of the operation</param>
         /// <param name="resourceUri">Relative path to the resource</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with an OperationInstance</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<OperationInstance> StartOperationAsync(int operationId, string resourceUri)
+        public Task<OperationInstance> StartOperationAsync(int operationId, string resourceUri, Headers headers = null)
         {
-            return _operations.StartOperationAsync(operationId, resourceUri, default, default);
+            return _operations.StartOperationAsync(operationId, resourceUri, default, default, headers);
         }
 
         /// <summary>
@@ -394,11 +415,12 @@ namespace RamBase.Api.Sdk
         /// <param name="operationId">The id of the operation</param>
         /// <param name="resourceUri">Relative path to the resource</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with an OperationInstance</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<OperationInstance> StartOperationAsync(int operationId, string resourceUri, string parameters = "")
+        public Task<OperationInstance> StartOperationAsync(int operationId, string resourceUri, string parameters = "", Headers headers = null)
         {
-            return _operations.StartOperationAsync(operationId, resourceUri, default, parameters);
+            return _operations.StartOperationAsync(operationId, resourceUri, default, parameters, headers);
         }
 
         /// <summary>
@@ -407,11 +429,12 @@ namespace RamBase.Api.Sdk
         /// <param name="operationId">The id of the operation</param>
         /// <param name="resourceUri">Relative path to the resource</param>
         /// <param name="parameters">Url queryparameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with an OperationInstance</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<OperationInstance> StartOperationAsync(int operationId, string resourceUri, OperationParameters parameters)
+        public Task<OperationInstance> StartOperationAsync(int operationId, string resourceUri, OperationParameters parameters, Headers headers = null)
         {
-            return _operations.StartOperationAsync(operationId, resourceUri, default, parameters.Build());
+            return _operations.StartOperationAsync(operationId, resourceUri, default, parameters.Build(), headers);
         }
 
 
@@ -422,11 +445,12 @@ namespace RamBase.Api.Sdk
         /// <param name="resourceUri">Relative path to the resource</param>
         /// <param name="data">Operation body as JSON</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with an OperationInstance</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<OperationInstance> StartOperationAsync(int operationId, string resourceUri, string data = "", string parameters = "")
+        public Task<OperationInstance> StartOperationAsync(int operationId, string resourceUri, string data = "", string parameters = "", Headers headers = null)
         {
-            return _operations.StartOperationAsync(operationId, resourceUri, data, parameters);
+            return _operations.StartOperationAsync(operationId, resourceUri, data, parameters, headers);
         }
 
 
@@ -437,22 +461,24 @@ namespace RamBase.Api.Sdk
         /// <param name="resourceUri">Relative path to the resource</param>
         /// <param name="data">Operation body as JSON</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with an OperationInstance</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<OperationInstance> StartOperationAsync(int operationId, string resourceUri, OperationParameters parameters, string data = "")
+        public Task<OperationInstance> StartOperationAsync(int operationId, string resourceUri, OperationParameters parameters, string data = "", Headers headers = null)
         {
-            return _operations.StartOperationAsync(operationId, resourceUri, data, parameters.Build());
+            return _operations.StartOperationAsync(operationId, resourceUri, data, parameters.Build(), headers);
         }
 
         /// <summary>
         /// Get the status of given operation
         /// </summary>
         /// <param name="operation">The operation</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with an OperationInstance</returns>
-        /// <exception cref="RequestException">Whenever a request fails</exception
-        public Task<OperationInstance> GetOperationStatusAsync(OperationInstance operation)
+        /// <exception cref="RequestException">Whenever a request fails</exception>
+        public Task<OperationInstance> GetOperationStatusAsync(OperationInstance operation, Headers headers = null)
         {
-            return _operations.GetOperationInstanceStatusAsync(operation);
+            return _operations.GetOperationInstanceStatusAsync(operation, headers);
         }
         #endregion
 
@@ -472,12 +498,25 @@ namespace RamBase.Api.Sdk
         /// <summary>
         /// Asynchronously performe a batch request
         /// </summary>
-        /// <param name="requests">BatchRequest</param>
+        /// <param name="Headers">Request headers</param>
+        /// <param name="requests">List of paths to resources with Url parameters</param>
         /// <returns>Task with a list of Resources in the order they were requested</returns>
         /// <exception cref="RequestException">Whenever batch request fails</exception>
-        public Task<List<Resource>> GetBatchAsync(BatchRequest requests)
+        public Task<List<Resource>> GetBatchAsync(Headers headers = null, params string[] requests)
         {
-            return _request.GetBatchAsync(requests.Build());
+            return _request.GetBatchAsync(new List<string>(requests), headers);
+        }
+
+        /// <summary>
+        /// Asynchronously performe a batch request
+        /// </summary>
+        /// <param name="requests">BatchRequest</param>
+        /// <param name="Headers">Request headers</param>
+        /// <returns>Task with a list of Resources in the order they were requested</returns>
+        /// <exception cref="RequestException">Whenever batch request fails</exception>
+        public Task<List<Resource>> GetBatchAsync(BatchRequest requests, Headers headers = null)
+        {
+            return _request.GetBatchAsync(requests.Build(), headers);
         }
 
         #endregion
@@ -490,11 +529,12 @@ namespace RamBase.Api.Sdk
         /// <param name="url">Relative or explicit path to resource</param>
         /// <param name="verb">Http verb</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with Metadata</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<Metadata> GetMetadataAsync(string url, ApiResourceVerb verb, string parameters = "")
+        public Task<Metadata> GetMetadataAsync(string url, ApiResourceVerb verb, string parameters = "", Headers headers = null)
         {
-            return _metadata.GetMetadataAsync(url, verb, parameters);
+            return _metadata.GetMetadataAsync(url, verb, parameters, headers);
         }
 
         /// <summary>
@@ -503,11 +543,12 @@ namespace RamBase.Api.Sdk
         /// <param name="url">Relative or explicit path to resource</param>
         /// <param name="verb">Http verb</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with Metadata</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<Metadata> GetMetadataAsync(string url, ApiResourceVerb verb, MetadataParameters parameters)
+        public Task<Metadata> GetMetadataAsync(string url, ApiResourceVerb verb, MetadataParameters parameters, Headers headers = null)
         {
-            return _metadata.GetMetadataAsync(url, verb, parameters.Build());
+            return _metadata.GetMetadataAsync(url, verb, parameters.Build(), headers);
         }
         #endregion
 
@@ -519,11 +560,12 @@ namespace RamBase.Api.Sdk
         /// <param name="obj">Object</param>
         /// <param name="field">Field</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with list of DomainValues</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<List<DomainValue>> GetApplicableDomainValuesAsync(string obj, string field, string parameters = "")
+        public Task<List<DomainValue>> GetApplicableDomainValuesAsync(string obj, string field, string parameters = "", Headers headers = null)
         {
-            return _domainValues.GetApplicableDomainValuesAsync(obj, field, parameters);
+            return _domainValues.GetApplicableDomainValuesAsync(obj, field, parameters, headers);
         }
 
         /// <summary>
@@ -532,11 +574,12 @@ namespace RamBase.Api.Sdk
         /// <param name="obj">Object</param>
         /// <param name="field">Field</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with list of DomainValues</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<List<DomainValue>> GetApplicableDomainValuesAsync(string obj, string field, DomainValueParameters parameters)
+        public Task<List<DomainValue>> GetApplicableDomainValuesAsync(string obj, string field, DomainValueParameters parameters, Headers headers = null)
         {
-            return _domainValues.GetApplicableDomainValuesAsync(obj, field, parameters.Build());
+            return _domainValues.GetApplicableDomainValuesAsync(obj, field, parameters.Build(), headers);
         }
         #endregion
 
@@ -547,11 +590,12 @@ namespace RamBase.Api.Sdk
         /// </summary>
         /// <param name="checkAccessRequests">Accesses to check</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with list of check access results</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<List<CheckAccessResult>> CheckAccessAsync(CheckAccessRequest checkAccessRequests, string parameters = "")
+        public Task<List<CheckAccessResult>> CheckAccessAsync(CheckAccessRequest checkAccessRequests, string parameters = "", Headers headers = null)
         {
-            return _access.CheckAccessAsync(checkAccessRequests.Requests, parameters);
+            return _access.CheckAccessAsync(checkAccessRequests.Requests, parameters, headers);
         }
 
         /// <summary>
@@ -559,11 +603,12 @@ namespace RamBase.Api.Sdk
         /// </summary>
         /// <param name="CheckAccessRequests">Accesses to check</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with list of access check results</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<List<CheckAccessResult>> CheckAccessAsync(CheckAccessRequest CheckAccessRequests, CheckAccessParameters parameters)
+        public Task<List<CheckAccessResult>> CheckAccessAsync(CheckAccessRequest CheckAccessRequests, CheckAccessParameters parameters, Headers headers = null)
         {
-            return _access.CheckAccessAsync(CheckAccessRequests.Requests, parameters.Build());
+            return _access.CheckAccessAsync(CheckAccessRequests.Requests, parameters.Build(), headers);
         }
 
         #endregion
@@ -573,10 +618,11 @@ namespace RamBase.Api.Sdk
         /// <summary>
         /// Asynchronously gets information about the current session
         /// </summary>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with Session</returns>
-        public Task<Session> GetCurrentSessionAsync()
+        public Task<Session> GetCurrentSessionAsync(Headers headers = null)
         {
-            return _sessions.GetCurrentSessionAsync();
+            return _sessions.GetCurrentSessionAsync(headers);
         }
 
         #endregion

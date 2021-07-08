@@ -19,8 +19,9 @@ namespace RamBase.Api.Sdk.DomainValues
         /// <param name="obj">Object</param>
         /// <param name="field">Field</param>
         /// <param name="parameters">Url query parameters</param>
+        /// <param name="Headers">Request headers</param>
         /// <returns>Task with list of DomainValues</returns>
-        public async Task<List<DomainValue>> GetApplicableDomainValuesAsync(string obj, string field, string parameters)
+        public async Task<List<DomainValue>> GetApplicableDomainValuesAsync(string obj, string field, string parameters, Headers headers = null)
         {
             if (string.IsNullOrEmpty(parameters))
                 parameters = "?";
@@ -30,7 +31,7 @@ namespace RamBase.Api.Sdk.DomainValues
             parameters += $"object={obj}&field={field}";
             parameters += "&$top=$max";
             string uri = $"system/domain-values/applicable-values";
-            var response = await _request.PerformRequestAsync(ApiResourceVerb.GET, uri, parameters: parameters);
+            var response = await _request.PerformRequestAsync(ApiResourceVerb.GET, uri, parameters: parameters, headers: headers);
             var res = JsonConvert.DeserializeObject<DomainValueWrapper>(response.Content);
             return res.DomainValues;
         }
