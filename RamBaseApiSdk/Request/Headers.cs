@@ -4,17 +4,21 @@ namespace RamBase.Api.Sdk.Request
 {
     public class Headers
     {
-        public void ImpersonateUser(string user)
-        {
-            RequestHeaders.Add("Impersonate-User", user);
-        }
-        
-       public Dictionary<string, string> RequestHeaders { get; set; } = new Dictionary<string, string>();
+        public string ImpersonateUser { get; set; }
 
-       public void Add(string name, string value)
-       {
-           RequestHeaders.Add(name, value);
-       }
-       
+        public Dictionary<string, string> RequestHeaders { get; set; } = new Dictionary<string, string>();
+
+        public void Add(string name, string value)
+        {
+            RequestHeaders.Add(name, value);
+        }
+
+        public Dictionary<string, string> Build()
+        {
+            if (!string.IsNullOrEmpty(ImpersonateUser))
+                RequestHeaders.Add("Impersonate-User", ImpersonateUser);
+            
+            return RequestHeaders;
+        }
     }
 }

@@ -77,7 +77,7 @@ namespace RamBase.Api.Sdk.Request
             if ((method == ApiResourceVerb.POST || method == ApiResourceVerb.PUT) && !string.IsNullOrEmpty(data))
                 request.Content = new StringContent(data, Encoding.UTF8, "application/json");
 
-            foreach (KeyValuePair<string, string> header in headers.RequestHeaders)
+            foreach (KeyValuePair<string, string> header in headers.Build())
                 request.Headers.Add(header.Key, header.Value);
 
             return await _httpClient.SendAsync(request);
