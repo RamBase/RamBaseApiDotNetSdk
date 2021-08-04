@@ -1,20 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace RamBase.Api.Sdk.Request
 {
     public abstract class QueryParameters
     {
-     
+
         /// <summary>
         /// Set the database to use for the request
         /// </summary>
         public string Db { get; set; }
-        
+
         /// <summary>
         /// Use to get localized responses. 
         /// </summary>
         public string Lang { get; set; }
-        
+
         /// <summary>
         /// This can be used to test a new version of a resource when your ApiClient is running an older, deprecated, version of a resource. Useminimumversion can be used to test against a newer version of the resource
         /// </summary>
@@ -50,21 +51,21 @@ namespace RamBase.Api.Sdk.Request
         /// <returns>Querystring</returns>
         public override string ToString()
         {
-            string value = "?";
+            StringBuilder value = new StringBuilder();
 
             if (!string.IsNullOrEmpty(Db))
-                value += $"$db={Db}&";
+                value.Append($"$db={Db}&");
 
             if (!string.IsNullOrEmpty(Lang))
-                value += $"$lang={Lang}&";
+                value.Append($"$lang={Lang}&");
 
             if (UseMinimumVersion.HasValue)
-                value += $"$useMinimumVersion={UseMinimumVersion}&";
+                value.Append($"$useMinimumVersion={UseMinimumVersion}&");
 
             foreach (KeyValuePair<string, string> parameter in Parameters)
-                value += $"{parameter.Key}={parameter.Value}&";
+                value.Append($"{parameter.Key}={parameter.Value}&");
 
-            return value.TrimEnd('&');
+            return value.Remove(value.Length - 1, 1).ToString();
         }
     }
 }

@@ -20,7 +20,6 @@ namespace RamBase.Api.Sdk.Request
                     RequestHeaders["Impersonate-User"] = ImpersonateUser;
                 else
                     RequestHeaders.Add("Impersonate-User", ImpersonateUser);
-
             return RequestHeaders;
         }
     }
