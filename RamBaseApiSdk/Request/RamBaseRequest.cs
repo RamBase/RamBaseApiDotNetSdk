@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Net;
+using Newtonsoft.Json;
 using RamBaseApiSdk.Authentication;
 
 namespace RamBase.Api.Sdk.Request
@@ -49,10 +49,16 @@ namespace RamBase.Api.Sdk.Request
         {
             headers = headers ?? new Headers();
 
-            if (!string.IsNullOrWhiteSpace(parameters) && !parameters.StartsWith("?") && !string.IsNullOrWhiteSpace(uri) && !uri.Contains('?'))
-                parameters = "?" + parameters;
+            if (!string.IsNullOrWhiteSpace(parameters))
+            {
+                if (!parameters.StartsWith("?") && !uri.Contains('?'))
+                    parameters = parameters.Insert(0, "?");
 
-            uri = string.Format("{0}{1}", uri, parameters);
+                else if (!parameters.StartsWith("?") && uri.Contains('?'))
+                    parameters = parameters.Insert(0, "&");
+
+                uri = string.Format("{0}{1}", uri, parameters);
+            }
 
             HttpMethod httpMethod = HttpMethod.Get;
 
@@ -117,7 +123,7 @@ namespace RamBase.Api.Sdk.Request
             }
             url = url.TrimEnd('&');
 
-            ApiResponse response = await PerformRequestAsync(ApiResourceVerb.GET, url, headers:headers);
+            ApiResponse response = await PerformRequestAsync(ApiResourceVerb.GET, url, headers: headers);
             BatchResponse batch = JsonConvert.DeserializeObject<BatchResponse>(response.Content);
             foreach (Resource resource in batch.Resources)
             {
