@@ -225,14 +225,17 @@ namespace RamBase.Api.Sdk
         /// <summary>
         /// Refreshes access token using refresh token
         /// </summary>
+        /// <param name="refreshToken">Use specified refresh token instead of the one stored in this SDK instance</param>
         /// <exception cref="LoginException">When refresh token is missing or login fails</exception>
-        public async Task RefreshLogin()
+        public async Task RefreshLogin(string refreshToken = null)
         {
-            if (string.IsNullOrEmpty(RefreshToken))
+            refreshToken = refreshToken ?? RefreshToken;
+
+            if (string.IsNullOrEmpty(refreshToken))
             {
                 throw new LoginException("Missing refresh token");
             }
-            LoginResponse loginResponse = await _authentication.RefreshLogin(ClientId, ClientSecret, RefreshToken);
+            LoginResponse loginResponse = await _authentication.RefreshLogin(ClientId, ClientSecret, refreshToken);
             SetLoginInfo(loginResponse.AccessToken, loginResponse.RefreshToken, loginResponse.ExpireTime, loginResponse.IsTargetTestSystem);
         }
 
