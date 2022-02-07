@@ -6,6 +6,9 @@ namespace RamBaseApiSdk.Meta
 {
     public class UncombinableFilter
     {
-        public string FilterName { get; set; }
+        /// <summary>
+        /// Key of the filter
+        /// </summary>
+        public string Key { get; set; }
     }
 }

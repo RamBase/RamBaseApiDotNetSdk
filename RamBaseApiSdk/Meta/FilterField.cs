@@ -6,36 +6,39 @@ namespace RamBase.Api.Sdk.Meta
 {
     public class FilterField
     {
+        /// <summary>
+        /// Name of the filter field
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Translated name of the filter field. Language determined by $lang parameter
+        /// </summary>
         public string TranslatedName { get; set; }
-        public string Description { get; set; }
+        
+        /// <summary>
+        /// Datatype of the filter field
+        /// </summary>
         public string Datatype { get; set; }
+        
+        /// <summary>
+        /// Description of the input field
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Translated description of the filter field. Language determined by $lang parameter
+        /// </summary>
+        public string TranslatedDescription { get; set; }
+		
+        /// <summary>
+        /// Applicable domain values of the filter field. Null if no applicable domain valyes
+        /// </summary>
         public string ApplicableDomainValues { get; set; }
-        public string ValidValuesDov { get; set; }
-        public List<Macro> AvailableMacros { get; set; }
 
-        public FilterField(KeyValuePair<string, dynamic> filterField)
-        {
-            Name = filterField.Key;
-            TranslatedName = filterField.Value.translatedName;
-            Description = filterField.Value.description;
-            Datatype = filterField.Value.datatype;
-            ApplicableDomainValues = filterField.Value.applicableDomainValues;
-            ValidValuesDov = filterField.Value.validValuesDov;
-            AvailableMacros = GetMacros(filterField.Value.availableMacros);
-        }
-        private List<Macro> GetMacros(dynamic macrosDynamic)
-        {
-            List<Macro> macros = new List<Macro>();
-            foreach (KeyValuePair<string, dynamic> macro in macrosDynamic)
-                macros.Add(new Macro()
-                {
-                    Name = macro.Key,
-                    AllowedUnits = ((IDictionary<String, object>)macro.Value).ContainsKey("allowedUnits") ? macro.Value.allowedUnits : null,
-                    DefaultUnit = ((IDictionary<String, object>)macro.Value).ContainsKey("defaultUnit") ? macro.Value.defaultUnit : null
-                });
-
-            return macros;
-        }
-    }
+        /// <summary>
+        /// Macro set this field belongs to. Null if none. The macro set determines which macros can be used when filtering on the field.
+        /// </summary>
+		public string MacroSet { get; set; }
+	}
 }

@@ -531,27 +531,12 @@ namespace RamBase.Api.Sdk
         /// </summary>
         /// <param name="url">Relative or explicit path to resource</param>
         /// <param name="verb">Http verb</param>
-        /// <param name="parameters">Url query parameters</param>
-        /// <param name="Headers">Request headers</param>
+        /// <param name="headers">Request headers</param>
         /// <returns>Task with Metadata</returns>
         /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<Metadata> GetMetadataAsync(string url, ApiResourceVerb verb, string parameters = "", Headers headers = null)
+        public Task<MetadataResponse> GetMetadataAsync(string url, ApiResourceVerb verb, Headers headers = null)
         {
-            return _metadata.GetMetadataAsync(url, verb, parameters, headers);
-        }
-
-        /// <summary>
-        /// Asynchronously get metadata for given resource with given verb
-        /// </summary>
-        /// <param name="url">Relative or explicit path to resource</param>
-        /// <param name="verb">Http verb</param>
-        /// <param name="parameters">Url query parameters</param>
-        /// <param name="Headers">Request headers</param>
-        /// <returns>Task with Metadata</returns>
-        /// <exception cref="RequestException">Whenever a request fails</exception>
-        public Task<Metadata> GetMetadataAsync(string url, ApiResourceVerb verb, MetadataParameters parameters, Headers headers = null)
-        {
-            return _metadata.GetMetadataAsync(url, verb, parameters.Build(), headers);
+            return _metadata.GetMetadataAsync(url, verb, headers);
         }
         #endregion
 
