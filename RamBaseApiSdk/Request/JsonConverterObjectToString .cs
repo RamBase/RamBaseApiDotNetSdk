@@ -1,22 +1,20 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RamBase.Api.Sdk.Request
 {
     //source: https://stackoverflow.com/questions/29980580/deserialize-json-object-property-to-string
-    class JsonConverterObjectToString : JsonConverter
+    internal class JsonConverterObjectToString : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(JTokenType));
+            return objectType == typeof(JTokenType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            JToken token = JToken.Load(reader);
+            var token = JToken.Load(reader);
             if (token.Type == JTokenType.Object)
             {
                 return token.ToString();

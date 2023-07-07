@@ -8,7 +8,7 @@ namespace RamBase.Api.Sdk.Access
 {
     internal class RamBaseAccess
     {
-        private RamBaseRequest _request;
+        private readonly RamBaseRequest _request;
         public RamBaseAccess(RamBaseRequest ramBaseRequest)
         {
             _request = ramBaseRequest;
@@ -18,18 +18,18 @@ namespace RamBase.Api.Sdk.Access
         /// </summary>
         /// <param name="accessCheckRequests">List of accesses to check</param>
         /// <param name="parameters">Url query parameters</param>
-        /// <param name="Headers">Request headers</param>
+        /// <param name="headers">Request headers</param>
         /// <returns>Task with list of CheckAccesses</returns>
         public async Task<List<CheckAccessResult>> CheckAccessAsync(List<CheckAccessRequest> accessCheckRequests, string parameters = "", Headers headers = null)
         {
-            string url = "system/api/api-operations/check-access";
+            const string url = "system/api/api-operations/check-access";
 
-            DefaultContractResolver contractResolver = new DefaultContractResolver
+            var contractResolver = new DefaultContractResolver
             {
                 NamingStrategy = new CamelCaseNamingStrategy()
             };
 
-            string data = JsonConvert.SerializeObject(
+            var data = JsonConvert.SerializeObject(
                 new
                 {
                     apiOperations = accessCheckRequests

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RamBase.Api.Sdk.Meta
+﻿namespace RamBase.Api.Sdk.Meta
 {
 	public class ResponseField
 	{

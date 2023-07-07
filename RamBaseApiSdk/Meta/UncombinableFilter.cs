@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RamBaseApiSdk.Meta
+﻿namespace RamBaseApiSdk.Meta
 {
     public class UncombinableFilter
     {

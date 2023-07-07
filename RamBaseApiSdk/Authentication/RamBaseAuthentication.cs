@@ -11,10 +11,10 @@ namespace RamBase.Api.Sdk.Authentication
 {
     internal class RamBaseAuthentication
     {
-        public string Authenticate = "oauth2";
-        public string AccessTokenRetrieval = "oauth2/access_token";
+        private const string Authenticate = "oauth2";
+        private const string AccessTokenRetrieval = "oauth2/access_token";
 
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
         private string _PKCECodeVerifier;
 
         /// <summary>
@@ -50,9 +50,7 @@ namespace RamBase.Api.Sdk.Authentication
             string forwardedIp
             )
         {
-            string uri = AccessTokenRetrieval;
-
-            string postData = string.Format(
+            var postData = string.Format(
                     "grant_type={0}&client_id={1}&client_secret={2}&username={3}&password={4}",
                     "password",
                     clientId,
@@ -70,7 +68,7 @@ namespace RamBase.Api.Sdk.Authentication
             if (!string.IsNullOrEmpty(forwardedIp))
                 postData = string.Format("{0}&endclientip={1}", postData, forwardedIp);
 
-            return PerformAuthentication(uri, postData);
+            return PerformAuthentication(AccessTokenRetrieval, postData);
         }
 
         #endregion
@@ -88,11 +86,11 @@ namespace RamBase.Api.Sdk.Authentication
         /// <returns>Authentication link for server-side application flow</returns>
         public string GetServerSideApplicationLink(string domain, string clientId, string redirectUri, string state, bool usePKCE)
         {
-            string authenticationLink = GetAuthenticationLink(domain, clientId, redirectUri, "code", state);
+            var authenticationLink = GetAuthenticationLink(domain, clientId, redirectUri, "code", state);
             if (usePKCE)
             {
                 _PKCECodeVerifier = RandomDataBase64url(32);
-                string PKCECodeChallenge = Base64urlencodeNoPadding(Sha256(_PKCECodeVerifier));
+                var PKCECodeChallenge = Base64urlencodeNoPadding(Sha256(_PKCECodeVerifier));
                 authenticationLink = string.Format("{0}{1}{2}{3}", authenticationLink, "&code_challenge=", PKCECodeChallenge, "&code_challenge_method=S256");
             }
             return authenticationLink;
@@ -108,7 +106,7 @@ namespace RamBase.Api.Sdk.Authentication
         /// <returns>Task with LoginResponse containing access token and refresh token</returns>
         public async Task<LoginResponse> GetAccessTokenFromOauthCode(string code, string clientId, string clientSecret, string redirectUri)
         {
-            string postData = string.Format(
+            var postData = string.Format(
                     "grant_type={0}&client_id={1}&client_secret={2}&code={3}&redirect_uri={4}",
                     "authorization_code",
                     clientId,
@@ -120,16 +118,18 @@ namespace RamBase.Api.Sdk.Authentication
             if (!string.IsNullOrEmpty(_PKCECodeVerifier))
                 postData += "&code_verifier=" + _PKCECodeVerifier;
 
-            LoginResponse loginResponse = await PerformAuthentication(AccessTokenRetrieval, postData);
+            var loginResponse = await PerformAuthentication(AccessTokenRetrieval, postData);
             _PKCECodeVerifier = "";
             return loginResponse;
         }
         #endregion
 
         #region Client-side web application flow
+
         /// <summary>
         /// Get link used in Client-Side Application Flow
         /// </summary>
+        /// <param name="domain">RamBase API domain</param>
         /// <param name="clientId">RamBase client id</param>
         /// <param name="redirectUri">A registered redirect_uri for that client id</param>
         /// <param name="state">Any string that your application would use to maintain state between the request and redirect response. Your application will receive the same value that it sends for this parameter. For example, you could use this parameter to redirect the user to a particular resource in your application</param>
@@ -143,7 +143,7 @@ namespace RamBase.Api.Sdk.Authentication
 
         #region Client credentials flow
         /// <summary>
-        /// Get an access token with client cretentials flow
+        /// Get an access token with client credentials flow
         /// </summary>
         /// <param name="clientId">RamBase client id</param>
         /// <param name="clientSecret">RamBase client secret</param>
@@ -163,8 +163,7 @@ namespace RamBase.Api.Sdk.Authentication
                 string endClientIp
             )
         {
-            string uri = AccessTokenRetrieval;
-            string postData = string.Format("client_id={0}&client_secret={1}&grant_type={2}", clientId, clientSecret, grantType);
+            var postData = string.Format("client_id={0}&client_secret={1}&grant_type={2}", clientId, clientSecret, grantType);
 
             if (!string.IsNullOrEmpty(customerId))
                 postData = string.Format("{0}&customerid={1}", postData, customerId);
@@ -178,7 +177,7 @@ namespace RamBase.Api.Sdk.Authentication
             if (!string.IsNullOrEmpty(endClientIp))
                 postData = string.Format("{0}&endclientip={1}", postData, endClientIp);
 
-            return PerformAuthentication(uri, postData);
+            return PerformAuthentication(AccessTokenRetrieval, postData);
         }
 
         #endregion
@@ -190,11 +189,11 @@ namespace RamBase.Api.Sdk.Authentication
         /// <param name="clientId">RamBase client id</param>
         /// <param name="clientSecret">RamBase client secret</param>
         /// <param name="refreshToken">The refresh token</param>
-        /// <returns>Task with LoginResponse containing accesstoken</returns>
+        /// <returns>Task with LoginResponse containing access token</returns>
         public Task<LoginResponse> RefreshLogin(string clientId, string clientSecret, string refreshToken)
         {
-            string uri = AccessTokenRetrieval;
-            string postData = string.Format(
+            var uri = AccessTokenRetrieval;
+            var postData = string.Format(
                     "client_id={0}&client_secret={1}&refresh_token={2}&grant_type={3}",
                     clientId,
                     clientSecret,
@@ -207,15 +206,17 @@ namespace RamBase.Api.Sdk.Authentication
         #endregion
 
         #region Common
+
         /// <summary>
         /// Creates url for authenticating with a web browser
         /// </summary>
+        /// <param name="domain">RamBase API domain</param>
         /// <param name="clientId">RamBase client id</param>
         /// <param name="redirectUri">A registered redirect_uri for your client ID</param>
         /// <param name="responseType"></param>
         /// <param name="state"></param>
         /// <returns></returns>
-        private string GetAuthenticationLink(string domain, string clientId, string redirectUri, string responseType, string state)
+        private static string GetAuthenticationLink(string domain, string clientId, string redirectUri, string responseType, string state)
         {
             return string.Format("{0}{1}?client_id={2}&response_type={3}&redirect_uri={4}&state={5}", domain, Authenticate, clientId, responseType, redirectUri, state);
         }
@@ -228,7 +229,7 @@ namespace RamBase.Api.Sdk.Authentication
         /// <returns>Task with LoginResponse</returns>
         private async Task<LoginResponse> PerformAuthentication(string uri, string postData)
         {
-            StringContent content = new StringContent(postData, Encoding.UTF8, "application/x-www-form-urlencoded");
+            var content = new StringContent(postData, Encoding.UTF8, "application/x-www-form-urlencoded");
             var response = await _httpClient.PostAsync(uri, content);
             await VerifyLogin(response);
             return await CreateLoginResponse(response);
@@ -242,7 +243,7 @@ namespace RamBase.Api.Sdk.Authentication
         /// <exception cref="LoginException">When http status code is not successful</exception>
         /// <exception cref="OtpRequiredException">When OTP is required</exception>
         /// <exception cref="TargetRequiredException">When target is required</exception>
-        private async Task VerifyLogin(HttpResponseMessage response)
+        private static async Task VerifyLogin(HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode)
                 return;
@@ -250,18 +251,17 @@ namespace RamBase.Api.Sdk.Authentication
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 var errorResponse = await response.Content.ReadAsStringAsync();
-                JsonLoginError loginError = JsonConvert.DeserializeObject<JsonLoginError>(errorResponse);
+                var loginError = JsonConvert.DeserializeObject<JsonLoginError>(errorResponse);
 
                 if (loginError == null)
                     throw new LoginException(response);
 
-                if (loginError.error_code == 5)
+                switch (loginError.error_code)
                 {
-                    throw new OtpRequiredException(loginError.targets, loginError.otp_method);
-                }
-                else if (loginError.error_code == 10)
-                {
-                    throw new TargetRequiredException(loginError.targets);
+                    case 5:
+                        throw new OtpRequiredException(loginError.targets, loginError.otp_method);
+                    case 10:
+                        throw new TargetRequiredException(loginError.targets);
                 }
             }
 
@@ -273,10 +273,10 @@ namespace RamBase.Api.Sdk.Authentication
         /// </summary>
         /// <param name="response">HTTP response message containing access token</param>
         /// <returns>LoginResponse</returns>
-        private async Task<LoginResponse> CreateLoginResponse(HttpResponseMessage response)
+        private static async Task<LoginResponse> CreateLoginResponse(HttpResponseMessage response)
         {
             var json = await response.Content.ReadAsStringAsync();
-            JsonLogin loginResult = JsonConvert.DeserializeObject<JsonLogin>(
+            var loginResult = JsonConvert.DeserializeObject<JsonLogin>(
                 json,
                 new JsonSerializerSettings
                 {
@@ -284,7 +284,7 @@ namespace RamBase.Api.Sdk.Authentication
                 }
             );
 
-            DateTime expire = loginResult.expires_in != null ?
+            var expire = loginResult.expires_in != null ?
             DateTime.Now.AddSeconds(double.Parse(loginResult.expires_in.Replace("\"", "").Replace("}", "")))
             : DateTime.Now;
 
@@ -303,8 +303,8 @@ namespace RamBase.Api.Sdk.Authentication
         /// <returns></returns>
         public static string RandomDataBase64url(uint length)
         {
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-            byte[] bytes = new byte[length];
+            var rng = new RNGCryptoServiceProvider();
+            var bytes = new byte[length];
             rng.GetBytes(bytes);
             return Base64urlencodeNoPadding(bytes);
         }
@@ -316,8 +316,8 @@ namespace RamBase.Api.Sdk.Authentication
         /// <returns></returns>
         public static byte[] Sha256(string inputString)
         {
-            byte[] bytes = Encoding.ASCII.GetBytes(inputString);
-            SHA256Managed sha256 = new SHA256Managed();
+            var bytes = Encoding.ASCII.GetBytes(inputString);
+            var sha256 = new SHA256Managed();
             return sha256.ComputeHash(bytes);
         }
 
@@ -328,7 +328,7 @@ namespace RamBase.Api.Sdk.Authentication
         /// <returns></returns>
         public static string Base64urlencodeNoPadding(byte[] buffer)
         {
-            string base64 = Convert.ToBase64String(buffer);
+            var base64 = Convert.ToBase64String(buffer);
 
             // Converts base64 to base64url.
             base64 = base64.Replace("+", "-");
