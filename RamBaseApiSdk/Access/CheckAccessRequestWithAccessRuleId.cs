@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RamBase.Api.Sdk.Access
+﻿namespace RamBase.Api.Sdk.Access
 {
     internal class CheckAccessRequestWithAccessRuleId : CheckAccessRequest
     {

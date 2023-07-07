@@ -15,11 +15,9 @@ namespace RamBase.Api.Sdk.Request
 
         public Dictionary<string, string> Build()
         {
-            if (!string.IsNullOrEmpty(ImpersonateUser))
-                if (RequestHeaders.ContainsKey("Impersonate-User"))
-                    RequestHeaders["Impersonate-User"] = ImpersonateUser;
-                else
-                    RequestHeaders.Add("Impersonate-User", ImpersonateUser);
+            if (!string.IsNullOrEmpty(ImpersonateUser)) 
+                RequestHeaders["Impersonate-User"] = ImpersonateUser;
+            
             return RequestHeaders;
         }
     }

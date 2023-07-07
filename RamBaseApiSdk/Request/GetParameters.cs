@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RamBase.Api.Sdk.Request
+﻿namespace RamBase.Api.Sdk.Request
 {
     public class GetParameters : QueryParameters
     {
@@ -63,12 +59,12 @@ namespace RamBase.Api.Sdk.Request
                 value += "&";
 
             if (TopMax)
-                value += $"$top=$max&";
+                value += "$top=$max&";
             else if (Top.HasValue)
                 value += $"$top={Top}&";
 
             if (ShowDomainDescriptions)
-                value += $"$showDomainDescriptions=true&";
+                value += "$showDomainDescriptions=true&";
 
             if (!string.IsNullOrEmpty(Filter))
                 value += $"$filter={Filter}&";

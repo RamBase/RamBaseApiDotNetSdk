@@ -1,6 +1,6 @@
 ﻿namespace RamBase.Api.Sdk.Operations
 {
-    public class ObjectReferance
+    public class ObjectReference
     {
         public string ObjectId { get; set; }
         public string ObjectType { get; set; }

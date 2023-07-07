@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RamBase.Api.Sdk.Meta
+﻿namespace RamBase.Api.Sdk.Meta
 {
 	public class InputField
 	{
@@ -73,7 +69,7 @@ namespace RamBase.Api.Sdk.Meta
 		public string AccessDenied { get; set; }
 
 		/// <summary>
-		/// Id of access rule that denied access to the field. Null if access is permittied or access was denied by a missing permission.
+		/// Id of access rule that denied access to the field. Null if access is permitted or access was denied by a missing permission.
 		/// </summary>
 		public int? AccessRuleId { get; set; }
 
