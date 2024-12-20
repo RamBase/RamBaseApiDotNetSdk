@@ -6,7 +6,7 @@ namespace RamBase.Api.Sdk.Meta
 {
 	internal class RamBaseMetadata
 	{
-		private RamBaseRequest _request;
+		private readonly RamBaseRequest _request;
 
 		public RamBaseMetadata(RamBaseRequest request)
 		{
@@ -18,16 +18,16 @@ namespace RamBase.Api.Sdk.Meta
 		/// </summary>
 		/// <param name="uri">Relative or explicit path to a resource/endpoint</param>
 		/// <param name="verb">Metadata for given verb</param>
-		/// <param name="Headers">Request headers</param>
+		/// <param name="headers">Request headers</param>
 		/// <returns>Task with metadata</returns>
 		/// <exception cref="RequestException">HTTP status not successful</exception>
 		public async Task<MetadataResponse> GetMetadataAsync(string uri, ApiResourceVerb verb, Headers headers = null)
 		{
 			var parameters = $"?uri={uri}&verb={verb}";
 			parameters += "&$expand=ApplicableDomainValues,ExpandableFields,Description,TranslatedDescription,TranslatedName,MacroDefinitions,URIParameters";
-			string url = "metadata";
-			ApiResponse response = await _request.PerformRequestAsync(ApiResourceVerb.GET, url, parameters: parameters, headers: headers);
-			MetadataWrapper metadataResponse = JsonConvert.DeserializeObject<MetadataWrapper>(response.Content);
+			const string url = "metadata";
+			var response = await _request.PerformRequestAsync(ApiResourceVerb.GET, url, parameters: parameters, headers: headers);
+			var metadataResponse = JsonConvert.DeserializeObject<MetadataWrapper>(response.Content);
 			return metadataResponse.Metadata;
 		}
 

@@ -8,7 +8,7 @@
 		public string AccessDenied { get; set; }
 
 		/// <summary>
-		/// Id of access rule that denied access to the resource. Null if access is permittied or access was denied by a missing permission.
+		/// Id of access rule that denied access to the resource. Null if access is permitted or access was denied by a missing permission.
 		/// </summary>
 		public int? AccessRuleId { get; set; }
 

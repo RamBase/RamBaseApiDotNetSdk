@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,7 +14,7 @@ namespace RamBase.Api.Sdk.Request
     /// </summary>
     internal class RamBaseRequest
     {
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
 
         public RamBaseRequest(HttpClient httpClient)
         {
@@ -27,7 +28,7 @@ namespace RamBase.Api.Sdk.Request
         /// <param name="uri">Relative or explicit URI</param>
         /// <param name="data">HTTP Body as JSON</param>
         /// <param name="parameters">URL Request parameters</param>
-        /// <param name="Headers">Request headers</param>
+        /// <param name="headers">Request headers</param>
         /// <returns>ApiResponse containing HTTP request body as JSON</returns>
         public async Task<ApiResponse> PerformRequestAsync(ApiResourceVerb method, string uri, string data = "", string parameters = "", Headers headers = null)
         {
@@ -60,7 +61,7 @@ namespace RamBase.Api.Sdk.Request
                 uri = string.Format("{0}{1}", uri, parameters);
             }
 
-            HttpMethod httpMethod = HttpMethod.Get;
+            HttpMethod httpMethod;
 
             switch (method)
             {
@@ -76,6 +77,8 @@ namespace RamBase.Api.Sdk.Request
                 case ApiResourceVerb.POST:
                     httpMethod = HttpMethod.Post;
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(method), method, "Must be a valid http verb");
             }
 
             var request = new HttpRequestMessage(httpMethod, uri);
@@ -83,7 +86,7 @@ namespace RamBase.Api.Sdk.Request
             if ((method == ApiResourceVerb.POST || method == ApiResourceVerb.PUT) && !string.IsNullOrEmpty(data))
                 request.Content = new StringContent(data, Encoding.UTF8, "application/json");
 
-            foreach (KeyValuePair<string, string> header in headers.Build())
+            foreach (var header in headers.Build())
                 request.Headers.Add(header.Key, header.Value);
 
             return await _httpClient.SendAsync(request);
@@ -94,7 +97,7 @@ namespace RamBase.Api.Sdk.Request
         /// </summary>
         /// <param name="response">HTTP response for validation</param>
         /// <exception cref="RequestException">HTTP status code not successful</exception>
-        public async Task ValidateResponse(HttpResponseMessage response)
+        public static async Task ValidateResponse(HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode)
                 return;
@@ -102,8 +105,8 @@ namespace RamBase.Api.Sdk.Request
             if (response.StatusCode == HttpStatusCode.Unauthorized)
                 throw new UnauthorizedException();
 
-            string json = await response.Content.ReadAsStringAsync();
-            Error responseError = JsonConvert.DeserializeObject<Error>(json);
+            var json = await response.Content.ReadAsStringAsync();
+            var responseError = JsonConvert.DeserializeObject<Error>(json);
             throw new RequestException(response, responseError);
         }
 
@@ -111,21 +114,21 @@ namespace RamBase.Api.Sdk.Request
         /// Perform an async request for multiple resources in one HTTP request
         /// </summary>
         /// <param name="resources">List of relative path to a RamBase endpoint with parameters</param>
-        /// <param name="Headers">Request headers</param>
+        /// <param name="headers">Request headers</param>
         /// <returns>Task with a list of the requested resources, sorted in the order requested</returns>
         public async Task<List<Resource>> GetBatchAsync(List<string> resources, Headers headers = null)
         {
-            string url = "batch?";
-            for (int i = 0; i < resources.Count; i++)
+            var url = "batch?";
+            for (var i = 0; i < resources.Count; i++)
             {
-                string resource = resources[i];
+                var resource = resources[i];
                 url += $"resource{i}={resource}&";
             }
             url = url.TrimEnd('&');
 
-            ApiResponse response = await PerformRequestAsync(ApiResourceVerb.GET, url, headers: headers);
-            BatchResponse batch = JsonConvert.DeserializeObject<BatchResponse>(response.Content);
-            foreach (Resource resource in batch.Resources)
+            var response = await PerformRequestAsync(ApiResourceVerb.GET, url, headers: headers);
+            var batch = JsonConvert.DeserializeObject<BatchResponse>(response.Content);
+            foreach (var resource in batch.Resources)
             {
                 if (resource.Response.Substring(0, 30).TrimStart('{').Trim().ToLower().StartsWith("\"httpstatuscode\""))
                     resource.Error = JsonConvert.DeserializeObject<Error>(resource.Response);

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace RamBase.Api.Sdk.Meta
+﻿namespace RamBase.Api.Sdk.Meta
 {
     public class SortableField
     {

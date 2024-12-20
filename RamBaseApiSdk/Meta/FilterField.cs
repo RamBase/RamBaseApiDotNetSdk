@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RamBase.Api.Sdk.Meta
+﻿namespace RamBase.Api.Sdk.Meta
 {
     public class FilterField
     {
@@ -32,7 +28,7 @@ namespace RamBase.Api.Sdk.Meta
         public string TranslatedDescription { get; set; }
 		
         /// <summary>
-        /// Applicable domain values of the filter field. Null if no applicable domain valyes
+        /// Applicable domain values of the filter field. Null if no applicable domain values
         /// </summary>
         public string ApplicableDomainValues { get; set; }
 

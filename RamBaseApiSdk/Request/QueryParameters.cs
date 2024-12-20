@@ -17,7 +17,7 @@ namespace RamBase.Api.Sdk.Request
 		public string Lang { get; set; }
 
 		/// <summary>
-		/// This can be used to test a new version of a resource when your ApiClient is running an older, deprecated, version of a resource. Useminimumversion can be used to test against a newer version of the resource
+		/// This can be used to test a new version of a resource when your ApiClient is running an older, deprecated, version of a resource. UseMinimumVersion can be used to test against a newer version of the resource
 		/// </summary>
 		public int? UseMinimumVersion { get; set; }
 
@@ -51,7 +51,7 @@ namespace RamBase.Api.Sdk.Request
 		/// <returns>Querystring</returns>
 		public override string ToString()
 		{
-			StringBuilder value = new StringBuilder();
+			var value = new StringBuilder();
 
 			if (!string.IsNullOrEmpty(Db))
 				value.Append($"$db={Db}&");
@@ -62,7 +62,7 @@ namespace RamBase.Api.Sdk.Request
 			if (UseMinimumVersion.HasValue)
 				value.Append($"$useMinimumVersion={UseMinimumVersion}&");
 
-			foreach (KeyValuePair<string, string> parameter in Parameters)
+			foreach (var parameter in Parameters)
 				value.Append($"{parameter.Key}={parameter.Value}&");
 
 			if (value.Length > 0)

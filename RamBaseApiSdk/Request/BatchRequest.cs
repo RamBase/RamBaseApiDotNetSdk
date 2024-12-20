@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace RamBase.Api.Sdk.Request
 {
@@ -20,10 +19,7 @@ namespace RamBase.Api.Sdk.Request
 
         public List<string> Build()
         {
-            List<string> requests = new List<string>();
-            foreach (KeyValuePair<string, string> request in Requests)
-                requests.Add(request.Key + request.Value);
-            return requests;
+            return Requests.Select(request => request.Key + request.Value).ToList();
         }
     }
 }
